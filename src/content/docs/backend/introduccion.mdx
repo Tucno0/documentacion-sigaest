@@ -1,0 +1,38 @@
+---
+title: Introducción
+description: Descripción inicial del apartado backend del sistema.
+---
+
+import { FileTree, Code } from '@astrojs/starlight/components';
+
+
+El sistema **SIGAEST** está diseñado para ofrecer una solución moderna y robusta en la gestión de actividades académicas y administrativas. En apartado de servidor Utiliza **NestJS** como framework backend, **Prisma** como ORM para interactuar con la base de datos, y **Socket.io** para la comunicación en tiempo real.
+
+- **NestJS**: Un framework para construir aplicaciones de backend escalables y de alto rendimiento, basado en TypeScript.
+- **Prisma**: Un ORM que facilita la interacción con la base de datos, con soporte para migraciones y un modelo de datos declarativo.
+- **Socket.io**: Una biblioteca que permite la comunicación en tiempo real entre el cliente y el servidor, ideal para actualizaciones dinámicas.
+
+## Estructura del proyecto
+
+La estructura del proyecto está organizada para mantener un desarrollo modular y escalable. A continuación se presenta la estructura de carpetas del sistema SIGAEST:
+
+<FileTree>
+
+- SERVER-SIGAEST
+  - src
+    - common            # Módulo común para utilidades, filtros, pipes, decoradores
+    - auth              # Módulo de autenticación (JWT, Passport)
+    - ...
+    - app.module.ts      # Módulo raíz de NestJS
+    - main.ts            # Punto de entrada de la aplicación
+  - test                  # Pruebas
+  - static                # Carpeta de archivos
+  - .env                   # Variables de entorno
+  - nest-cli.json          # Configuración de NestJS
+  - package.json           # Dependencias y scripts de Node.js
+  - tsconfig.json          # Configuración de TypeScript
+  - README.md              # Documentación del proyecto
+
+</FileTree>
+
+Esta estructura modular y organizada facilita la expansión del proyecto a medida que crece, manteniendo todo bien segregado en áreas específicas de funcionalidad.

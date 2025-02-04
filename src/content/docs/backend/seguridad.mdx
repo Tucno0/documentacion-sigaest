@@ -1,0 +1,63 @@
+---
+title: Seguridad
+description: Guía sobre autenticación y autorización en el sistema SIGAEST utilizando decoradores y tokens Bearer.
+---
+
+import { Code } from '@astrojs/starlight/components';
+
+
+La seguridad en el sistema **SIGAEST** se basa en un sistema de autenticación y autorización utilizando **JWT (JSON Web Tokens)** y decoradores personalizados para restringir el acceso a ciertas rutas y recursos.
+
+## 1. Autenticación con JWT
+
+Para la autenticación, el sistema utiliza **Bearer Tokens** generados mediante **JWT**. Al iniciar sesión, el usuario recibe un **token** que debe incluir en la cabecera de las solicitudes para acceder a rutas protegidas.
+
+### Ejemplo de un Token JWT
+
+Un **Bearer Token** típico se ve de la siguiente manera:
+
+```
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...
+```
+
+## 2. Uso de decoradores
+
+El sistema emplea decoradores personalizados para restringir el acceso a las rutas según los roles de usuario. 
+
+### Ejemplo del decorador `@Auth()`
+
+Este decorador se usa en los controladores para verificar si un usuario tiene el rol adecuado antes de permitir el acceso a una ruta.
+
+<Code code={`import { Auth } from '../decorators/auth.decorator';
+import { ValidRoles } from '../interfaces/valid-roles.interface';
+import { Controller, Get } from '@nestjs/common';
+
+@Controller('students')
+export class StudentController {
+  
+    @Get()
+    @Auth({ role: ValidRoles.Student }) 
+    findAll() {
+      return 'Lista de estudiantes';
+    }
+}`
+} lang="typescript" title="Uso del decorador @Auth()" />
+
+### Explicación
+
+- **`@Auth({ role: ValidRoles.Student })`**: Solo permite el acceso a usuarios con el rol de **Student**.
+- **ValidRoles**: Define los roles válidos en una interfaz.
+- **findAll()**: Método que devuelve la lista de estudiantes solo si el usuario tiene el rol adecuado.
+
+---
+
+## 4. Tabla de roles validos en SIGAEST
+
+| Nombre                    | Descripción |
+|-------------------------|-------------|
+| **Administrativo**        | Es el encargado de administrar el sistema |
+| **Docente**         | Es quien desempeña el rol de docente |
+| **Egresado**              | Aquellos que ya concluyeron sus estudios |
+| **Estudiante**        | Aquellos que pertenecen activamente a la institución |
+
+Siguiendo estas prácticas, el sistema garantiza que solo los usuarios autorizados puedan acceder a los recursos protegidos.

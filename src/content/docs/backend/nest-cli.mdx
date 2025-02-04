@@ -1,0 +1,81 @@
+---
+title: Nest CLI
+description: Guía para utilizar la CLI de NestJS en el desarrollo, incluyendo los comandos para crear recursos, módulos, controladores, servicios y entidades.
+---
+
+import { Code } from '@astrojs/starlight/components';
+
+El uso de **Nest CLI** permite crear y gestionar los recursos del proyecto de manera rápida y eficiente. A continuación, se detallan algunos de los comandos más comunes utilizados en el desarrollo.
+
+## 1. Instalación
+
+Para instalar **Nest CLI** de manera global en su ordeandor, utiliza el siguiente comando:
+
+<Code code={`npm install -g @nestjs/cli`} lang="bash" title="Instalar Nest CLI" />
+
+
+## 2. Crear un nuevo recurso (Resource)
+
+Un **resource** en NestJS es un conjunto de archivos que agrupan funcionalidades como controladores, servicios y entidades. Para generar un recurso, utiliza el siguiente comando:
+
+<Code code={`nest generate resource <nombre-del-recurso> --no-spec`} lang="bash" title="Crear resource" />
+
+Este comando creará un modulo completo (module, controller, service) sin los archivos de test.
+
+## 3. Crear un módulo
+
+Un **módulo** es la unidad básica de organización en NestJS. Para generar un módulo, usa el siguiente comando:
+
+<Code code={`nest generate module <nombre-del-modulo>`} lang="bash" title="Crear Módulo" />
+
+Este comando creará un archivo de módulo en la carpeta correspondiente.
+
+## 4. Crear un controlador
+
+El **controlador** se encarga de manejar las solicitudes HTTP y devolver respuestas. Para generar un controlador, utiliza el siguiente comando:
+
+<Code code={`nest generate controller <nombre-del-controlador>`} lang="bash" title="Crear Controlador" />
+
+Este comando creará un archivo de controlador con métodos que corresponden a las rutas definidas.
+
+## 5. Crear un servicio
+
+El **servicio** contiene la lógica del negocio y se utiliza para manejar las operaciones del proyecto. Para generar un servicio, usa este comando:
+
+<Code code={`nest generate service <nombre-del-servicio>`} lang="bash" title="Crear Servicio" />
+
+Este comando generará un archivo de servicio donde puedes colocar la lógica que se ejecuta en la capa de negocio.
+
+## 5. Crear una entidad
+
+Una **entidad** representa una tabla en la base de datos y es gestionada por **Prisma** o el ORM que estés utilizando. Para crear una entidad, utiliza el siguiente comando:
+
+<Code code={`nest generate entity <nombre-de-la-entidad>`} lang="bash" title="Crear Entidad" />
+
+Este comando generará el archivo de la entidad con sus propiedades, que luego podrás usar con Prisma o cualquier otro ORM configurado.
+
+## Comando general
+
+Además de estos comandos específicos, puedes utilizar el siguiente comando para generar cualquier recurso que desees de manera rápida:
+
+<Code code={`nest generate <tipo-de-recurso> <nombre-del-recurso>`} lang="bash" title="Comando General" />
+
+Donde `<tipo-de-recurso>` puede ser:
+- `module`: Para crear un módulo.
+- `controller`: Para crear un controlador.
+- `service`: Para crear un servicio.
+- `resource`: Para crear un recurso completo.
+
+## Resumen de comandos
+
+Aquí tienes un resumen rápido de los comandos más utilizados:
+
+<Code code={`nest generate module <nombre-del-modulo>   # Crear un nuevo módulo
+nest generate controller <nombre-del-controlador>  # Crear un nuevo controlador
+nest generate service <nombre-del-servicio>        # Crear un nuevo servicio
+nest generate resource <nombre-del-recurso>        # Crear un nuevo recurso
+nest generate entity <nombre-de-la-entidad>        # Crear una nueva entidad`} lang="bash" title="Resumen de Comandos" />
+
+---
+
+Usando estos comandos de Nest CLI, puedes ver la documentación completa en [Nest CLI](https://docs.nestjs.com/cli/overview).

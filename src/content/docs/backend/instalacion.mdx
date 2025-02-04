@@ -1,11 +1,51 @@
 ---
-title: Example Instalacion
-description: A reference page in my new Starlight docs site.
+title: Instalación
+description: Guía para clonar, instalar dependencias y configurar las variables de entorno del proyecto SIGAEST.
 ---
 
-Reference pages are ideal for outlining how things work in terse and clear terms.
-Less concerned with telling a story or addressing a specific use case, they should give a comprehensive outline of what you're documenting.
+import { Code } from '@astrojs/starlight/components';
+import { Aside } from '@astrojs/starlight/components';
 
-## Further reading
+A continuación se describen los pasos necesarios para clonar el proyecto desde el repositorio, instalar las dependencias necesarias y configurar las variables de entorno.
 
-- Read [about reference](https://diataxis.fr/reference/) in the Diátaxis framework
+## 1. Clonar el repositorio
+
+Para comenzar, clona el repositorio del proyecto utilizando Git. Abre tu terminal y ejecuta el siguiente comando:
+
+<Code code={`git clone https://github.com/Ideas-Soft/sigaest-server.git`} lang="bash" title="Clonar el repositorio" />
+
+Este comando descargará una copia del repositorio en tu máquina local.
+
+<Aside title="Nota">Para el equipo de desarrolladores de las instituciones a las cuales se les brinda el servicio, pueden omitir esta paso.</Aside>
+
+
+## 2. Instalar las dependencias
+
+Una vez que hayas clonado el repositorio, navega a la carpeta del proyecto y usa **npm** para instalar todas las dependencias necesarias:
+
+<Code code={ `cd sigaest-server
+npm install`} lang="bash" title="Instalar dependencias" />
+
+Este comando descargará e instalará todas las dependencias necesarias especificadas en el archivo `package.json`.
+
+## 3. Configuración de las variables de entorno
+
+El proyecto requiere ciertas variables de entorno para funcionar correctamente, como las credenciales de base de datos y las claves de API. Para configurarlas, sigue estos pasos:
+
+1. Copia el archivo de ejemplo `.env.example` a un nuevo archivo llamado `.env`:
+
+<Code code={`cp .env.example .env`} lang="bash" title="Copiar archivo de variables de entorno" />
+
+Después de configurar las variables de entorno, guarda el archivo.
+
+## 4. Iniciar el proyecto
+
+Finalmente, para iniciar el servidor y probar el proyecto, ejecuta el siguiente comando:
+
+<Code code={`npm run start:dev`} lang="bash" title="Iniciar el proyecto en desarrollo" />
+
+Esto levantará el servidor en el puerto predeterminado, y podrás acceder al proyecto a través de `http://localhost:3000`.
+
+---
+
+Con estos pasos habrás clonado el proyecto, instalado las dependencias y configurado las variables de entorno correctamente. ¡Ya puedes comenzar a trabajar con el proyecto SIGAEST!

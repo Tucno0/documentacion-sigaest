@@ -1,0 +1,54 @@
+---
+title: Socket.io en SIGAEST
+description: Guía sobre la implementación de WebSockets en SIGAEST con Socket.io.
+---
+
+import { Code } from '@astrojs/starlight/components';
+
+La integración de **WebSockets** en SIGAEST se realiza con **Socket.io**, lo que permite comunicación en tiempo real entre el cliente y el servidor.  
+
+A continuación, se detallan los pasos para configurar **Socket.io** en el backend con **NestJS**, así como la conexión desde el cliente y los canales utilizados para la comunicación.
+
+---
+
+## 1. Conexión del cliente a WebSockets
+
+El cliente se conectará al **WebSocket** usando **Socket.io-client**.
+
+### Instalación del cliente
+
+<Code code={`npm install socket.io-client`} lang="bash" title="Instalación del cliente" />
+
+
+## 2. Canales de comunicación
+
+En **SIGAEST**, se utilizan los siguientes canales para la comunicación en **WebSockets**:
+
+| Canal         | Descripción |
+|--------------|-------------|
+| `message`    | Canal para enviar y recibir mensajes en tiempo real. |
+| `notifications` | Canal para enviar notificaciones a los usuarios. |
+
+
+## 3. Manejo de Autenticación en WebSockets
+
+Para proteger las conexiones **WebSocket**, se tiene que enviar **Token de usuario** al momento de la conexión.
+
+### Enviar Token desde el Cliente
+
+<Code code={`const socket = io('http://localhost:3000', {
+  auth: {
+    token: 'Bearer mi_token_secreto'
+  }
+});`} lang="javascript" title="Ejemplo de envío de Token desde el cliente" />
+
+---
+
+## 4. Resumen de la Implementación
+
+| Elemento        | Descripción |
+|---------------|-------------|
+| **Canales** | Se definen canales como `message`, `notifications`. |
+| **Autenticación** | Se protege la conexión con tokens **JWT**. |
+
+Con esta configuración, **SIGAEST** permite **comunicación en tiempo real** mediante **WebSockets** con **Socket.io**.

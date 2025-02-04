@@ -1,0 +1,87 @@
+---
+title: Prisma
+description: Guía para usar Prisma en el proyecto, incluyendo la creación y migración del esquema con MySQL.
+---
+
+import { Code } from '@astrojs/starlight/components';
+
+**Prisma** es un ORM de tipo seguro que se utiliza para interactuar con la base de datos en aplicaciones Node.js. A continuación, se explican los pasos para crear y migrar el esquema de Prisma usando **MySQL**.
+
+## 1. Crear el esquema de Prisma
+
+Una vez instalado Prisma, necesitas crear un esquema que describa tu base de datos. Este archivo se encuentra en la carpeta `prisma` y se llama `schema.prisma`. A continuación, se muestra cómo debe verse el esquema de Prisma configurado para usar **MySQL**:
+
+<Code code={`// prisma/schema.prisma
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mysql"  // Usamos MySQL como proveedor de base de datos
+  url      = env("DATABASE_URL") // La URL de tu base de datos
+}
+
+// Aquí defines las entidades que representarán las tablas en la base de datos
+model User {
+  id       Int    @id @default(autoincrement())
+  name     String
+  email    String @unique
+  posts    Post[]
+}
+
+model Post {
+  id      Int    @id @default(autoincrement())
+  title   String
+  content String
+  userId  Int
+  user    User   @relation(fields: [userId], references: [id])
+}`} lang="prisma" title="Esquema de Prisma (MySQL)" />
+
+### Explicación
+
+- **generator client**: Define el generador para Prisma Client, que se utiliza para interactuar con la base de datos.
+- **datasource db**: Configura la fuente de datos para MySQL. Aquí se indica el proveedor como `mysql` y la URL de la base de datos, que debe ser proporcionada a través de la variable de entorno `DATABASE_URL`.
+- **models**: Define las tablas en la base de datos como modelos en el esquema de Prisma.
+
+## 3. Migrar el esquema
+
+Una vez que hayas definido tu esquema, debes crear una migración para reflejar esos cambios en la base de datos. Prisma te permite realizar migraciones de manera sencilla. Sigue estos pasos:
+
+### Paso 1: Crear una migración
+
+Ejecuta el siguiente comando para crear una nueva migración que refleje los cambios en el esquema:
+
+<Code code={`npx prisma migrate dev --name init`} lang="bash" title="Crear migración" />
+
+Este comando realiza lo siguiente:
+- Crea una migración con el nombre que proporcionaste (`init` en este caso).
+- Aplica los cambios de la migración a la base de datos.
+
+### Paso 2: Generar Prisma Client
+
+Después de crear y aplicar la migración, debes generar el Prisma Client, que es el que usarás en el código para interactuar con la base de datos. Utiliza el siguiente comando:
+
+<Code code={`npx prisma generate`} lang="bash" title="Generar Prisma Client" />
+
+Este comando genera el cliente Prisma, que es un conjunto de métodos para interactuar con las tablas definidas en tu esquema.
+
+## 4. Verificar el estado de las migraciones
+
+Puedes verificar el estado de las migraciones ejecutadas con el siguiente comando:
+
+<Code code={`npx prisma migrate status`} lang="bash" title="Verificar migraciones" />
+
+Este comando muestra el estado de las migraciones aplicadas y si tu base de datos está sincronizada con el esquema de Prisma.
+
+## Resumen de comandos
+
+Aquí tienes un resumen rápido de los comandos más utilizados con Prisma:
+
+<Code code={`npx prisma migrate dev --name <nombre-de-migracion>  # Crear y aplicar una migración
+npx prisma generate                                      # Generar Prisma Client
+npx prisma migrate status                                # Verificar el estado de las migraciones`} lang="bash" title="Resumen de comandos Prisma" />
+
+---
+
+Con estos pasos, puedes gestionar de manera sencilla el esquema de tu base de datos en **MySQL** y aplicar las migraciones con Prisma, asegurando que tu base de datos esté siempre sincronizada con el código de la aplicación.

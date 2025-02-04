@@ -1,11 +1,158 @@
 ---
-title: Example Ejemplos
-description: A reference page in my new Starlight docs site.
+title: Ejemplos
+description: Ejemplos de módulo, controlador, servicio, guard, decorador, DTO, interfaz, enum y otros.
 ---
 
-Reference pages are ideal for outlining how things work in terse and clear terms.
-Less concerned with telling a story or addressing a specific use case, they should give a comprehensive outline of what you're documenting.
+import { Code } from '@astrojs/starlight/components';
 
-## Further reading
+En este documento se presentan ejemplos de código utilizados en el desarrollo del sistema **SIGAEST** con **NestJS**.  
 
-- Read [about reference](https://diataxis.fr/reference/) in the Diátaxis framework
+Incluye ejemplos de:  
+✅ Módulo  
+✅ Controlador  
+✅ Servicio  
+✅ Guard  
+✅ Decorador  
+✅ DTO  
+✅ Interfaz  
+✅ Enum  
+
+---
+
+## 1. Módulo
+
+En **NestJS**, un **módulo** agrupa elementos como controladores, servicios y otros módulos.
+
+<Code code={`import { Module } from '@nestjs/common';
+import { UserController } from './user.controller';
+import { UserService } from './user.service';
+
+@Module({
+  controllers: [UserController],
+  providers: [UserService],
+  exports: [UserService],
+})
+export class UserModule {}`} lang="typescript" title="Ejemplo de Módulo" />
+
+---
+
+## 2. Controlador
+
+El **controlador** maneja las solicitudes HTTP.
+
+<Code code={`import { Controller, Get, Param } from '@nestjs/common';
+import { UserService } from './user.service';
+
+@Controller('users')
+export class UserController {
+  constructor(private readonly userService: UserService) {}
+
+  @Get(':id')
+  getUser(@Param('id') userId: string) {
+    return this.userService.getUserById(userId);
+  }
+}`} lang="typescript" title="Ejemplo de Controlador" />
+
+---
+
+## 3. Servicio
+
+El **servicio** maneja la lógica de negocio.
+
+<Code code={`import { Injectable } from '@nestjs/common';
+
+@Injectable()
+export class UserService {
+  getUserById(userId: string) {
+    return { id: userId, name: 'Juan Pérez' };
+  }
+}`} lang="typescript" title="Ejemplo de Servicio" />
+
+---
+
+## 4. DTO
+
+Los **DTOs (Data Transfer Objects)** definen el formato de los datos enviados y recibidos.
+
+<Code code={`export class CreateUserDto {
+  name: string;
+  email: string;
+  password: string;
+}`} lang="typescript" title="Ejemplo de DTO" />
+
+Uso en un controlador:
+
+<Code code={`@Post()
+createUser(@Body() userData: CreateUserDto) {
+  return this.userService.create(userData);
+}`} lang="typescript" title="Uso de DTO en Controlador" />
+
+---
+
+## 5. Interfaz
+
+Las **interfaces** definen la estructura de los datos.
+
+<Code code={`export interface User {
+  id: string;
+  name: string;
+  email: string;
+}`} lang="typescript" title="Ejemplo de Interfaz" />
+
+Uso en un servicio:
+
+<Code code={`const user: User = { id: '1', name: 'Juan', email: 'juan@example.com' };`} lang="typescript" title="Uso de Interfaz" />
+
+---
+
+## 6. Enum (`roles.enum.ts`)
+
+Los **enums** definen valores predefinidos.
+
+<Code code={`export enum UserRole {
+  ADMIN = 'admin',
+  STUDENT = 'student',
+  TEACHER = 'teacher',
+}`} lang="typescript" title="Ejemplo de Enum" />
+
+Uso en un DTO:
+
+<Code code={`export class AssignRoleDto {
+  role: UserRole;
+}`} lang="typescript" title="Uso de Enum en DTO" />
+
+---
+
+## 7. Excepción personalizada
+
+NestJS permite definir **excepciones personalizadas**.
+
+<Code code={`import { HttpException, HttpStatus } from '@nestjs/common';
+
+export class CustomException extends HttpException {
+  constructor() {
+    super('Este es un error personalizado', HttpStatus.BAD_REQUEST);
+  }
+}`} lang="typescript" title="Ejemplo de Excepción Personalizada" />
+
+Uso en un servicio:
+
+<Code code={`throw new CustomException();`} lang="typescript" title="Uso de Excepción" />
+
+---
+
+## Resumen
+
+| Elemento   | Descripción |
+|------------|-------------|
+| **Módulo** | Agrupa controladores y servicios. |
+| **Controlador** | Maneja solicitudes HTTP. |
+| **Servicio** | Contiene la lógica de negocio. |
+| **DTO** | Define la estructura de los datos enviados y recibidos. |
+| **Interfaz** | Define la estructura de objetos de datos. |
+| **Enum** | Define valores predefinidos. |
+| **Excepción Personalizada** | Maneja errores específicos. |
+
+---
+
+Con estos ejemplos, **SIGAEST** mantiene una estructura modular y escalable en **NestJS**. 🚀

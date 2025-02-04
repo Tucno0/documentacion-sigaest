@@ -1,0 +1,211 @@
+---
+title: REST en SIGAEST
+description: Guía sobre la construcción de Middleware, Guards, Pipes, Controllers, Services, Modules y Decoradores en el sistema SIGAEST.
+---
+
+import { Code } from '@astrojs/starlight/components';
+
+En **NestJS**, el patrón REST se implementa a través de controladores (**Controllers**), servicios (**Services**) y módulos (**Modules**). Además, se pueden extender las funcionalidades con **Middleware**, **Guards**, **Pipes** y **Decoradores**.
+
+---
+
+## 1. Middleware en NestJS
+
+Los **Middleware** interceptan las solicitudes antes de llegar al controlador. Se utilizan para **autenticación, registro de logs o modificación de la petición**.
+
+### Ejemplo de Middleware para Logs
+
+<Code code={`import { Injectable, NestMiddleware } from '@nestjs/common';
+import { Request, Response, NextFunction } from 'express';
+
+@Injectable()
+export class LoggerMiddleware implements NestMiddleware {
+  use(req: Request, res: Response, next: NextFunction) {
+    console.log(\`[LOG] \${req.method} \${req.url}\`);
+    next();
+  }
+}`} lang="typescript" title="Middleware de Logs" />
+
+Para registrarlo en un módulo:
+
+<Code code={`import { MiddlewareConsumer, Module, NestModule } from '@nestjs/common';
+import { LoggerMiddleware } from './middlewares/logger.middleware';
+
+@Module({})
+export class AppModule implements NestModule {
+  configure(consumer: MiddlewareConsumer) {
+    consumer.apply(LoggerMiddleware).forRoutes('*');
+  }
+}`} lang="typescript" title="Registro del Middleware" />
+
+---
+
+## 2. Guards en NestJS
+
+Los **Guards** se utilizan para **autorización**, verificando si un usuario puede acceder a una ruta específica.
+
+### Ejemplo de Guard para verificar autenticación
+
+<Code code={`import { Injectable, CanActivate, ExecutionContext } from '@nestjs/common';
+import { Observable } from 'rxjs';
+
+@Injectable()
+export class AuthGuard implements CanActivate {
+  canActivate(context: ExecutionContext): boolean | Promise<boolean> | Observable<boolean> {
+    const request = context.switchToHttp().getRequest();
+    return request.headers.authorization === 'Bearer mi_token_secreto';
+  }
+}`} lang="typescript" title="Guard de Autenticación" />
+
+Para aplicarlo en un controlador:
+
+<Code code={`import { Controller, Get, UseGuards } from '@nestjs/common';
+import { AuthGuard } from '../guards/auth.guard';
+
+@Controller('protected')
+export class ProtectedController {
+  
+  @Get()
+  @UseGuards(AuthGuard)
+  getProtectedData() {
+    return 'Ruta protegida';
+  }
+}`} lang="typescript" title="Uso del Guard en un Controlador" />
+
+---
+
+## 3. Pipes en NestJS
+
+Los **Pipes** transforman y validan datos antes de que lleguen a un controlador.
+
+### Ejemplo de Pipe para validar datos
+
+<Code code={`import { PipeTransform, Injectable, ArgumentMetadata, BadRequestException } from '@nestjs/common';
+
+@Injectable()
+export class ParseIntPipe implements PipeTransform {
+  transform(value: any, metadata: ArgumentMetadata) {
+    const val = parseInt(value, 10);
+    if (isNaN(val)) {
+      throw new BadRequestException('El valor no es un número válido.');
+    }
+    return val;
+  }
+}`} lang="typescript" title="Pipe para Validar Números" />
+
+Aplicación en un controlador:
+
+<Code code={`import { Controller, Get, Param, UsePipes } from '@nestjs/common';
+import { ParseIntPipe } from '../pipes/parse-int.pipe';
+
+@Controller('users')
+export class UserController {
+
+  @Get(':id')
+  @UsePipes(ParseIntPipe)
+  getUser(@Param('id') id: number) {
+    return \`Usuario con ID: \${id}\`;
+  }
+}`} lang="typescript" title="Uso de Pipe en un Controlador" />
+
+---
+
+## 4. Controllers en NestJS
+
+Los **Controllers** manejan las rutas y la lógica de las peticiones.
+
+### Ejemplo de controlador
+
+<Code code={`import { Controller, Get, Post, Body } from '@nestjs/common';
+
+@Controller('users')
+export class UserController {
+  
+  @Get()
+  findAll() {
+    return 'Lista de usuarios';
+  }
+
+  @Post()
+  create(@Body() userDto: any) {
+    return \`Usuario creado: \${JSON.stringify(userDto)}\`;
+  }
+}`} lang="typescript" title="Ejemplo de Controlador" />
+
+---
+
+## 5. Services en NestJS
+
+Los **Services** manejan la lógica de negocio y se inyectan en los controladores.
+
+### Ejemplo de servicio
+
+<Code code={`import { Injectable } from '@nestjs/common';
+
+@Injectable()
+export class UserService {
+  getUsers() {
+    return ['Usuario 1', 'Usuario 2'];
+  }
+}`} lang="typescript" title="Ejemplo de Servicio" />
+
+---
+
+## 6. Modules en NestJS
+
+Los **Modules** agrupan controladores y servicios relacionados.
+
+### Ejemplo de módulo
+
+<Code code={`import { Module } from '@nestjs/common';
+import { UserController } from './controllers/user.controller';
+import { UserService } from './services/user.service';
+
+@Module({
+  controllers: [UserController],
+  providers: [UserService],
+})
+export class UserModule {}`} lang="typescript" title="Ejemplo de Módulo" />
+
+---
+
+## 7. Decoradores en NestJS
+
+Los **Decoradores** agregan metadatos a clases y métodos para extender sus funcionalidades.
+
+### Ejemplo de decorador personalizado
+
+<Code code={`import { SetMetadata } from '@nestjs/common';
+
+export const Role = (role: string) => SetMetadata('role', role);`} lang="typescript" title="Decorador para Roles" />
+
+Aplicación en un controlador:
+
+<Code code={`import { Controller, Get } from '@nestjs/common';
+import { Role } from '../decorators/role.decorator';
+
+@Controller('admin')
+export class AdminController {
+  
+  @Get()
+  @Role('admin')
+  getAdminData() {
+    return 'Datos del administrador';
+  }
+}`} lang="typescript" title="Uso del Decorador en un Controlador" />
+
+---
+
+## 8. Resumen de la arquitectura REST en SIGAEST
+
+| Componente    | Descripción |
+|--------------|-------------|
+| **Middleware**  | Intercepta solicitudes antes de llegar al controlador. |
+| **Guards**      | Restringen el acceso a rutas según reglas de autorización. |
+| **Pipes**       | Transforman y validan datos antes de ser procesados. |
+| **Controllers** | Manejan las rutas y la lógica de las peticiones. |
+| **Services**    | Contienen la lógica de negocio. |
+| **Modules**     | Agrupan controladores y servicios relacionados. |
+| **Decoradores** | Agregan metadatos a clases y métodos. |
+
+Con esta estructura modular y el uso de estos componentes, el sistema **SIGAEST** sigue las mejores prácticas para el desarrollo de **APIs RESTful en NestJS**.

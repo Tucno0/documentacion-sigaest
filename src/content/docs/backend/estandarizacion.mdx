@@ -1,45 +1,54 @@
 ---
-title: Example Estandarizacion
-description: A reference page in my new Starlight docs site.
+title: Estandarización
+description: Guía para la construcción del esquema de Prisma y los DTOs en el proyecto, siguiendo las convenciones de nomenclatura.
 ---
 
-Reference pages are ideal for outlining how things work in terse and clear terms.
-Less concerned with telling a story or addressing a specific use case, they should give a comprehensive outline of what you're documenting.
+import { Code } from '@astrojs/starlight/components';
 
-## Further reading
+En este proyecto, seguimos ciertas convenciones de nomenclatura y estructuras estándar para garantizar consistencia, legibilidad y escalabilidad. A continuación, se detallan las prácticas y convenciones utilizadas, tanto para la construcción del esquema de Prisma como para la definición de DTOs (Data Transfer Objects).
 
-- Read [about reference](https://diataxis.fr/reference/) in the Diátaxis framework
+## 1. Construcción del esquema de Prisma
 
-Reference pages are ideal for outlining how things work in terse and clear terms.
-Less concerned with telling a story or addressing a specific use case, they should give a comprehensive outline of what you're documenting.
+El esquema de **Prisma** es una parte fundamental de la arquitectura, ya que define cómo las entidades de la base de datos están estructuradas. En el proyecto, seguimos las siguientes reglas para la creación de los modelos de Prisma:
 
-Reference pages are ideal for outlining how things work in terse and clear terms.
-Less concerned with telling a story or addressing a specific use case, they should give a comprehensive outline of what you're documenting.
+### Convenciones de nombres
 
-Reference pages are ideal for outlining how things work in terse and clear terms.
-Less concerned with telling a story or addressing a specific use case, they should give a comprehensive outline of what you're documenting.
+- **CamelCase**: Usamos **camelCase** para los nombres de los campos y relaciones en el esquema de Prisma. La primera letra de cada palabra después de la primera se escribe en mayúscula, y la primera palabra en minúscula (ejemplo: `userId`, `postTitle`).
+- **Singular para modelos**: Los modelos en Prisma deben tener nombres en singular, por ejemplo, **User** y **Post**, y los nombres de las tablas se generan automáticamente en plural, a menos que se especifique lo contrario.
+- **Relaciones**: Se define la relación entre entidades utilizando la sintaxis adecuada, especificando las claves foráneas y las relaciones en los campos correspondientes.
 
-Reference pages are ideal for outlining how things work in terse and clear terms.
-Less concerned with telling a story or addressing a specific use case, they should give a comprehensive outline of what you're documenting.
+### Ejemplo de esquema de Prisma con convenciones
 
-Reference pages are ideal for outlining how things work in terse and clear terms.
-Less concerned with telling a story or addressing a specific use case, they should give a comprehensive outline of what you're documenting.
+Aquí hay un ejemplo de cómo sería un esquema de Prisma usando las convenciones mencionadas:
 
-## Further reading
+<Code code={`// prisma/schema.prisma
 
-- Read [about reference](https://diataxis.fr/reference/) in the Diátaxis framework
+model User {
+  id       Int    @id @default(autoincrement())
+  userName String @unique
+  email    String @unique
+  posts    Post[]
+}
 
-Reference pages are ideal for outlining how things work in terse and clear terms.
-Less concerned with telling a story or addressing a specific use case, they should give a comprehensive outline of what you're documenting.
+model Post {
+  id       Int    @id @default(autoincrement())
+  title    String
+  content  String
+  userId   Int    // Relación con el usuario
+  user     User   @relation(fields: [userId], references: [id]) // Relación con la entidad User
+}`} lang="prisma" title="Ejemplo de Esquema de Prisma" />
 
-Reference pages are ideal for outlining how things work in terse and clear terms.
-Less concerned with telling a story or addressing a specific use case, they should give a comprehensive outline of what you're documenting.
+### Explicación
 
-Reference pages are ideal for outlining how things work in terse and clear terms.
-Less concerned with telling a story or addressing a specific use case, they should give a comprehensive outline of what you're documenting.
+- **userId**: El campo `userId` está escrito en **camelCase** para mantener la consistencia con la nomenclatura en el código de la aplicación.
+- **Relación entre `User` y `Post`**: La relación se establece utilizando el campo `userId` en el modelo **Post**, que hace referencia a la entidad **User**.
 
-Reference pages are ideal for outlining how things work in terse and clear terms.
-Less concerned with telling a story or addressing a specific use case, they should give a comprehensive outline of what you're documenting.
+## 2. Construcción de DTOs (Data Transfer Objects)
 
-Reference pages are ideal for outlining how things work in terse and clear terms.
-Less concerned with telling a story or addressing a specific use case, they should give a comprehensive outline of what you're documenting.
+Los **DTOs** son objetos que se utilizan para transferir datos entre diferentes capas de la aplicación. En este proyecto, seguimos una estructura coherente y uniforme para construir los DTOs.
+
+### Convenciones de nombres para DTOs
+
+- **CamelCase**: Los nombres de los DTOs y sus campos también siguen la convención **camelCase**. Ejemplo: `createUserDto`, `updateUserDto`, y los campos `userId`, `postTitle`.
+- **Uso de prefijos**: Los DTOs de creación (`Create`) y actualización (`Update`) deben tener un prefijo para diferenciarlos, por ejemplo, `CreateUserDto` y `UpdateUserDto`.
+- **Validación**: Usamos clases de validación como **class-validator** para asegurar que los datos sean correctos antes de ser procesados.
